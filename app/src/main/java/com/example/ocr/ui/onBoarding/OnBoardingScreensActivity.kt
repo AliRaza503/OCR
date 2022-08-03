@@ -1,8 +1,8 @@
-package com.example.ocr.UI.OnBoarding
+package com.example.ocr.ui.onBoarding
 
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
-import com.example.ocr.UI.Utils.UIUtils
+import com.example.ocr.ui.utils.UIUtils
 import com.example.ocr.databinding.ActivityOnBoardingScreensBinding
 
 class OnBoardingScreensActivity : AppCompatActivity() {

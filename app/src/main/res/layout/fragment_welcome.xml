@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:background="@color/black"
-    tools:context=".UI.OnBoarding.Screens.WelcomeFragment">
+    tools:context=".ui.onBoarding.Screens.WelcomeFragment">
 
     <LinearLayout
         android:id="@+id/linearLayoutTRPS"

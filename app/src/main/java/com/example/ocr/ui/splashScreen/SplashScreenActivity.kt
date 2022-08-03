@@ -1,4 +1,4 @@
-package com.example.ocr.UI.SplashScreen
+package com.example.ocr.ui.splashScreen
 
 import android.annotation.SuppressLint
 import android.content.Context
@@ -8,7 +8,7 @@ import android.os.Handler
 import androidx.appcompat.app.AppCompatActivity
 import com.example.ocr.MainActivity
 import com.example.ocr.R
-import com.example.ocr.UI.OnBoarding.OnBoardingScreensActivity
+import com.example.ocr.ui.onBoarding.OnBoardingScreensActivity
 
 @SuppressLint("CustomSplashScreen")
 class SplashScreenActivity : AppCompatActivity() {

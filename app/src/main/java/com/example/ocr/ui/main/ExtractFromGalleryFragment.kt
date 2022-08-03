@@ -1,4 +1,4 @@
-package com.example.ocr.UI.Main
+package com.example.ocr.ui.main
 
 import android.graphics.Bitmap
 import android.graphics.Matrix

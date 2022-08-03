@@ -1,4 +1,4 @@
-package com.example.ocr.UI.Utils
+package com.example.ocr.ui.utils
 
 import android.app.Activity
 import android.view.View

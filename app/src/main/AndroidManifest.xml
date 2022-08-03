@@ -25,7 +25,7 @@
             android:name=".SampleActivity"
             android:exported="false" />
         <activity
-            android:name=".UI.SplashScreen.SplashScreenActivity"
+            android:name=".ui.splashScreen.SplashScreenActivity"
             android:exported="true"
             android:launchMode="singleInstance"
             android:noHistory="true"
@@ -38,7 +38,7 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".UI.OnBoarding.OnBoardingScreensActivity"
+            android:name=".ui.onBoarding.OnBoardingScreensActivity"
             android:exported="false"
             android:screenOrientation="nosensor" />
 

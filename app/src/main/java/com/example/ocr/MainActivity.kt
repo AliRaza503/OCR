@@ -2,7 +2,7 @@ package com.example.ocr
 
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
-import com.example.ocr.UI.Utils.UIUtils
+import com.example.ocr.ui.utils.UIUtils
 import com.example.ocr.databinding.ActivityMainBinding
 
 

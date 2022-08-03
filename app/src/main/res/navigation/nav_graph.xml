@@ -6,7 +6,7 @@
     app:startDestination="@id/viewPagerFragment">
     <fragment
         android:id="@+id/viewPagerFragment"
-        android:name="com.example.ocr.UI.OnBoarding.ViewPagerFragment"
+        android:name="com.example.ocr.ui.onBoarding.ViewPagerFragment"
         android:label="fragment_view_pager"
         tools:layout="@layout/fragment_view_pager" />
 </navigation>

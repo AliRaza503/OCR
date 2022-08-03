@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@drawable/on_boarding_bg"
-    tools:context=".UI.OnBoarding.ViewPagerFragment">
+    tools:context=".ui.onBoarding.ViewPagerFragment">
 
     <LinearLayout
         android:id="@+id/pagerLinearLayout"

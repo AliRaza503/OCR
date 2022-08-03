@@ -1,4 +1,4 @@
-package com.example.ocr.UI.OnBoarding
+package com.example.ocr.ui.onBoarding
 
 
 import android.content.Context
@@ -13,7 +13,7 @@ import androidx.fragment.app.Fragment
 import androidx.viewpager2.widget.ViewPager2
 import com.example.ocr.MainActivity
 import com.example.ocr.R
-import com.example.ocr.UI.OnBoarding.Screens.*
+import com.example.ocr.ui.onBoarding.Screens.*
 import com.example.ocr.databinding.FragmentViewPagerBinding
 import com.example.todo.onBoarding.ViewPagerAdapter
 

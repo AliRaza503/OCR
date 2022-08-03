@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:background="@color/black"
-    tools:context=".UI.OnBoarding.Screens.FifthViewFragment">
+    tools:context=".ui.onBoarding.Screens.FifthViewFragment">
 
     <TextView
         android:id="@+id/first_screen_heading"

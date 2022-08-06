@@ -3,12 +3,15 @@
   <component name="DesignSurface">
     <option name="filePathToZoomLevelMap">
       <map>
+        <entry key="../../../../../../../layout/custom_preview.xml" value="0.13177083333333334" />
         <entry key="app/src/main/res/drawable/bg_btn_gradient.xml" value="0.2225" />
         <entry key="app/src/main/res/drawable/bottom_sheet_fab.xml" value="0.1585" />
         <entry key="app/src/main/res/drawable/btn_text_color.xml" value="0.1585" />
         <entry key="app/src/main/res/drawable/circle_blue_intro.xml" value="0.223" />
         <entry key="app/src/main/res/drawable/circle_fab_intro.xml" value="0.1585" />
+        <entry key="app/src/main/res/drawable/crop_corner_circle.xml" value="0.223" />
         <entry key="app/src/main/res/drawable/divider_color.xml" value="0.223" />
+        <entry key="app/src/main/res/drawable/ic_add.xml" value="0.223" />
         <entry key="app/src/main/res/drawable/ic_baseline_camera_24.xml" value="0.1295" />
         <entry key="app/src/main/res/drawable/ic_fab_intro.xml" value="0.1585" />
         <entry key="app/src/main/res/drawable/ic_first.xml" value="0.223" />
@@ -21,6 +24,7 @@
         <entry key="app/src/main/res/drawable/ic_welcome_style_text.xml" value="0.13" />
         <entry key="app/src/main/res/drawable/mask_group.xml" value="0.1295" />
         <entry key="app/src/main/res/drawable/on_boarding_bg.xml" value="0.158" />
+        <entry key="app/src/main/res/drawable/rectangle_view.xml" value="0.1585" />
         <entry key="app/src/main/res/drawable/splash_screen.xml" value="0.152" />
         <entry key="app/src/main/res/layout/activity_main.xml" value="0.1987179487179487" />
         <entry key="app/src/main/res/layout/activity_on_boarding_screens.xml" value="0.1987179487179487" />

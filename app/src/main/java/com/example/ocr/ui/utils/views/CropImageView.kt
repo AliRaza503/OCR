@@ -57,6 +57,7 @@ class CropImageView @JvmOverloads constructor(
     private var mShowMagnifier = true // 是否显示放大镜
     private var mShowEdgeMidPoint = true //是否显示边中点
     var mDragLimit = true // 是否限制锚点拖动范围为凸四边形
+    var imgDrawn = false
 
     internal enum class DragPointType {
         LEFT_TOP, RIGHT_TOP, RIGHT_BOTTOM, LEFT_BOTTOM, TOP, RIGHT, BOTTOM, LEFT;
@@ -96,6 +97,7 @@ class CropImageView @JvmOverloads constructor(
             return
         }
         mCropPoints = fullImgCropPoints
+        imgDrawn = true
         invalidate()
     }
 
@@ -284,6 +286,10 @@ class CropImageView @JvmOverloads constructor(
         super.onDraw(canvas)
         //Initialize image location information
         drawablePosition
+        //init the crop points on first draw
+        if (!imgDrawn) {
+            cropPoints
+        }
         //开始绘制选区
         onDrawCropPoint(canvas)
     }
@@ -387,7 +393,6 @@ class CropImageView @JvmOverloads constructor(
             )
         }
     }
-
 
     private fun onDrawMask(canvas: Canvas) {
         if (mMaskAlpha <= 0) {

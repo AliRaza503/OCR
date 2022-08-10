@@ -2,25 +2,19 @@ package com.example.ocr.ui.main
 
 import android.annotation.SuppressLint
 import android.graphics.Bitmap
-import android.graphics.BitmapFactory
-import android.graphics.PointF
-import android.graphics.drawable.BitmapDrawable
 import android.net.Uri
 import android.os.Bundle
-import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.FrameLayout
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.core.graphics.drawable.toBitmap
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
-import com.example.ocr.R
 import com.example.ocr.databinding.FragmentExtractFromGalleryBinding
 import com.example.ocr.ui.utils.UIUtils
 import com.example.ocr.ui.utils.extensions.rotate
-import com.example.ocr.ui.utils.extensions.scaledBitmap
 
 
 //object BitmapScaler {
@@ -55,43 +49,12 @@ class ExtractFromGalleryFragment : Fragment() {
                 .show()
             return@registerForActivityResult
         }
-        bitmap = BitmapFactory.decodeFile(imageFile.path)
-        binding.imgView.setImageBitmap(bitmap)
+        binding.imgView.setImageURI(imgURI)
+        bitmap = binding.imgView.drawable.toBitmap()
         //Draw cropping rectangle and start working
-        initCropping()
+//        initCropping()
         binding.imgInfo.text = "${bitmap.width} height ${bitmap.height}"
     }
-
-    /**
-     * To make the crop rectangle visible and start cropping
-     */
-    private fun initCropping() {
-        val scaledBitmap: Bitmap =
-            bitmap.scaledBitmap(binding.imgCropHolder.width, binding.imgCropHolder.height)
-        binding.imgView.setImageBitmap(scaledBitmap)
-        val tempBitmap = (binding.imgView.drawable as BitmapDrawable).bitmap
-        //This is to get the edge points of image
-        val pointFs = getEdgePoints(tempBitmap)
-        binding.cropRectangleView.setPoints(pointFs)
-        binding.cropRectangleView.visibility = View.VISIBLE
-        val padding = resources.getDimension(R.dimen.rectangle_dimens).toInt()
-        val layoutParams =
-            FrameLayout.LayoutParams(tempBitmap.width + padding, tempBitmap.height + padding)
-        layoutParams.gravity = Gravity.CENTER
-        binding.cropRectangleView.layoutParams = layoutParams
-    }
-
-    private fun getEdgePoints(tempBitmap: Bitmap): Map<Int, PointF> {
-        //whole image coverage
-        val pointFs = mutableListOf<PointF>()
-        pointFs.add(PointF(20f, 20f))
-        pointFs.add(PointF(tempBitmap.width.toFloat(), 20f))
-        pointFs.add(PointF(20f, tempBitmap.height.toFloat()))
-        pointFs.add(PointF(tempBitmap.width.toFloat(), tempBitmap.height.toFloat()))
-        return binding.cropRectangleView.getOrderedValidEdgePoints(tempBitmap, pointFs)
-    }
-
-//    private val Int.toDp get() = this / Resources.getSystem().displayMetrics.density.toInt()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -113,32 +76,19 @@ class ExtractFromGalleryFragment : Fragment() {
             findNavController().navigateUp()
         }
         binding.cropDoneBtn.setOnClickListener {
-            getCoppedImage()
+            //TODO: get crop image
         }
         binding.rotateImage.apply {
             setOnClickListener {
                 binding.imgView.apply {
-                    this@ExtractFromGalleryFragment.bitmap = bitmap!!.rotate(90f)
-                    this.setImageBitmap(bitmap!!)
+                    this@ExtractFromGalleryFragment.bitmap = bitmap.rotate(90f)
+                    this.setImageBitmap(bitmap)
+                    //Image is redrawn when rotated
+                    this.imgDrawn = false
+                    this.invalidate()
                 }
             }
             //TODO: change icon tint when selected
         }
-    }
-
-    private fun getCoppedImage() {
-        val points: Map<Int, PointF> = binding.cropRectangleView.getPoints()
-        val xRatio: Float = bitmap.width.toFloat() / bitmap.width
-        val yRatio: Float = bitmap.height.toFloat() / bitmap.height
-        val pointPadding =
-            requireContext().resources.getDimension(R.dimen.rectangle_dimens).toInt()
-        val x1: Float = (points.getValue(0).x + pointPadding) * xRatio
-        val x2: Float = (points.getValue(1).x + pointPadding) * xRatio
-        val x3: Float = (points.getValue(2).x + pointPadding) * xRatio
-        val x4: Float = (points.getValue(3).x + pointPadding) * xRatio
-        val y1: Float = (points.getValue(0).y + pointPadding) * yRatio
-        val y2: Float = (points.getValue(1).y + pointPadding) * yRatio
-        val y3: Float = (points.getValue(2).y + pointPadding) * yRatio
-        val y4: Float = (points.getValue(3).y + pointPadding) * yRatio
     }
 }

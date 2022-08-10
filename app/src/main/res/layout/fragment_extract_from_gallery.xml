@@ -67,8 +67,8 @@
             android:textSize="20sp" />
     </com.google.android.material.appbar.MaterialToolbar>
 
-    <FrameLayout
-        android:id="@+id/imgViewHolder"
+    <com.example.ocr.ui.utils.views.RectangleView
+        android:id="@+id/imgView"
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:layout_marginBottom="60dp"
@@ -76,30 +76,8 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/toolbar">
+        app:layout_constraintTop_toBottomOf="@id/toolbar" />
 
-        <FrameLayout
-            android:id="@+id/imgCropHolder"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_gravity="center">
-
-            <ImageView
-                android:id="@+id/imgView"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:adjustViewBounds="true"
-                android:contentDescription="Loaded Image"
-                android:elevation="0dp"
-                tools:srcCompat="@drawable/on_boarding_bg" />
-        </FrameLayout>
-
-        <com.example.ocr.ui.utils.views.RectangleView
-            android:id="@+id/cropRectangleView"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:visibility="gone" />
-    </FrameLayout>
 
     <TextView
         android:id="@+id/imgInfo"

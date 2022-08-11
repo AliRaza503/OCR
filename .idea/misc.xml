@@ -28,10 +28,12 @@
         <entry key="app/src/main/res/drawable/splash_screen.xml" value="0.152" />
         <entry key="app/src/main/res/layout/activity_main.xml" value="0.1987179487179487" />
         <entry key="app/src/main/res/layout/activity_on_boarding_screens.xml" value="0.1987179487179487" />
+        <entry key="app/src/main/res/layout/activity_sample.xml" value="0.1987179487179487" />
         <entry key="app/src/main/res/layout/activity_splash_screen.xml" value="0.2421875" />
         <entry key="app/src/main/res/layout/bottom_sheet_fab.xml" value="0.19786324786324785" />
         <entry key="app/src/main/res/layout/dialog_permission_alert.xml" value="0.25427350427350426" />
         <entry key="app/src/main/res/layout/fragment_camera.xml" value="0.1987179487179487" />
+        <entry key="app/src/main/res/layout/fragment_crop.xml" value="0.1987179487179487" />
         <entry key="app/src/main/res/layout/fragment_extract_from_gallery.xml" value="0.1987179487179487" />
         <entry key="app/src/main/res/layout/fragment_fifth_view.xml" value="0.18640444634459172" />
         <entry key="app/src/main/res/layout/fragment_first.xml" value="0.1987179487179487" />

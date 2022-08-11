@@ -1,7 +1,5 @@
 package com.example.ocr.ui.main
 
-import android.annotation.SuppressLint
-import android.graphics.Bitmap
 import android.net.Uri
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -9,12 +7,10 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
-import androidx.core.graphics.drawable.toBitmap
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import com.example.ocr.databinding.FragmentExtractFromGalleryBinding
 import com.example.ocr.ui.utils.UIUtils
-import com.example.ocr.ui.utils.extensions.rotate
 
 
 //object BitmapScaler {
@@ -37,7 +33,6 @@ class ExtractFromGalleryFragment : Fragment() {
 
     private lateinit var binding: FragmentExtractFromGalleryBinding
     private var imgURI: Uri? = null
-    private lateinit var bitmap: Bitmap
     private val getImageUri = registerForActivityResult(
         ActivityResultContracts.GetContent()
     ) {
@@ -45,15 +40,16 @@ class ExtractFromGalleryFragment : Fragment() {
 
         val imageFile = (UIUtils.getFileFromUri(requireContext(), imgURI))
         if (imageFile == null) {
-            Toast.makeText(requireContext(), "Can't load the selected file!", Toast.LENGTH_SHORT)
+            Toast.makeText(requireContext(), "No image loaded", Toast.LENGTH_SHORT)
                 .show()
+            findNavController().navigateUp()
             return@registerForActivityResult
         }
-        binding.imgView.setImageURI(imgURI)
-        bitmap = binding.imgView.drawable.toBitmap()
-        //Draw cropping rectangle and start working
-//        initCropping()
-        binding.imgInfo.text = "${bitmap.width} height ${bitmap.height}"
+        val action =
+            ExtractFromGalleryFragmentDirections.actionExtractFromGalleryFragmentToCropFragment(
+                imgURI.toString()
+            )
+        findNavController().navigate(action)
     }
 
     override fun onCreateView(
@@ -62,33 +58,8 @@ class ExtractFromGalleryFragment : Fragment() {
     ): View {
         // Inflate the layout for this fragment
         binding = FragmentExtractFromGalleryBinding.inflate(inflater, container, false)
-
-
         getImageUri.launch("image/*")
-        //Set click listeners
-        allClickListeners()
         return binding.root
     }
 
-    @SuppressLint("ClickableViewAccessibility")
-    private fun allClickListeners() {
-        binding.cropCancelBtn.setOnClickListener {
-            findNavController().navigateUp()
-        }
-        binding.cropDoneBtn.setOnClickListener {
-            //TODO: get crop image
-        }
-        binding.rotateImage.apply {
-            setOnClickListener {
-                binding.imgView.apply {
-                    this@ExtractFromGalleryFragment.bitmap = bitmap.rotate(90f)
-                    this.setImageBitmap(bitmap)
-                    //Image is redrawn when rotated
-                    this.imgDrawn = false
-                    this.invalidate()
-                }
-            }
-            //TODO: change icon tint when selected
-        }
-    }
 }

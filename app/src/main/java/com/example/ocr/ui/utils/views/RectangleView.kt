@@ -9,12 +9,14 @@ import android.util.Log
 import android.view.MotionEvent
 import androidx.core.content.ContextCompat
 import androidx.core.graphics.drawable.toBitmap
+import androidx.core.graphics.scale
 import com.example.ocr.R
 import com.example.ocr.ui.utils.CropUtils
 import kotlin.math.max
 import kotlin.math.min
 import kotlin.math.pow
 import kotlin.math.sqrt
+
 
 const val MASK_ALPHA = 100
 const val TOUCH_POINT_CATCH_DISTANCE = 15f
@@ -23,8 +25,8 @@ const val P_RT = 1
 const val P_RB = 2
 const val P_LB = 3
 const val MAGNIFIER_BORDER_WIDTH = 1f
+const val MAG_FACTOR = 3
 
-//TODO: not proper magnification
 class RectangleView @JvmOverloads constructor(
     context: Context,
     attrs: AttributeSet? = null,
@@ -39,10 +41,10 @@ class RectangleView @JvmOverloads constructor(
 
     private val maskXfermode: Xfermode = PorterDuffXfermode(PorterDuff.Mode.DST_OUT)
     private var magnifierDrawable: ShapeDrawable? = null
-    private val magnifierMatrix = Matrix()
+    private var magnifierMatrix = Matrix()
 
     //Redrawn on each rotation
-    var imgDrawn = false
+    private var imgDrawn = false
 
     // where the image is actually displayed
     private var drawableWidth = 0f
@@ -107,8 +109,8 @@ class RectangleView @JvmOverloads constructor(
         //Initializing magnifier paint
         magnifierPaint.apply {
             isAntiAlias = true
-            color = Color.WHITE
-            style = Paint.Style.FILL
+            color = ContextCompat.getColor(context, R.color.teal_700)
+            style = Paint.Style.FILL_AND_STROKE
         }
         magnifierCrossPaint.apply {
             isAntiAlias = true
@@ -124,22 +126,24 @@ class RectangleView @JvmOverloads constructor(
 
     //Initialize the magnifier
     private fun initMagnifier() {
-        val bitmap = this.drawable.toBitmap().copy(Bitmap.Config.RGB_565, true)
+        val bitmap = Bitmap.createBitmap(width, height, Bitmap.Config.RGB_565)
         val canvas = Canvas(bitmap)
-//        canvas.drawColor(Color.BLACK)
+        val img = drawable.toBitmap()
+            .scale(drawableWidth.toInt() * MAG_FACTOR, drawableHeight.toInt() * MAG_FACTOR)
+        canvas.drawColor(Color.BLACK)
         canvas.drawBitmap(
-            bitmap,
+            img,
             null,
             Rect(
-                drawableLeft.toInt(),
-                drawableTop.toInt(),
-                (drawableWidth + drawableLeft).toInt(),
-                (drawableHeight + drawableTop).toInt()
+                (drawableLeft / MAG_FACTOR).toInt(),
+                drawableTop.toInt() / MAG_FACTOR,
+                (drawableWidth * MAG_FACTOR + drawableLeft / MAG_FACTOR).toInt(),
+                (drawableHeight * MAG_FACTOR + drawableTop / MAG_FACTOR).toInt()
             ),
             null
         )
         canvas.save()
-        val magnifierShader = BitmapShader(bitmap, Shader.TileMode.CLAMP, Shader.TileMode.CLAMP)
+        val magnifierShader = BitmapShader(img, Shader.TileMode.CLAMP, Shader.TileMode.CLAMP)
         magnifierDrawable = ShapeDrawable(OvalShape())
         magnifierDrawable!!.paint.shader = magnifierShader
     }
@@ -153,6 +157,13 @@ class RectangleView @JvmOverloads constructor(
         drawMask(canvas)
         drawLines(canvas)
         drawMagnifier(canvas)
+    }
+
+    override fun setImageBitmap(bm: Bitmap?) {
+        super.setImageBitmap(bm)
+        magnifierDrawable = null
+        imgDrawn = false
+        invalidate()
     }
 
     override fun onTouchEvent(event: MotionEvent): Boolean {
@@ -188,10 +199,34 @@ class RectangleView @JvmOverloads constructor(
 
         if (pointType != null) {
             when (pointType) {
-                DragPointType.LEFT_TOP -> if (!canMoveLeftTop(x, y)) return
-                DragPointType.RIGHT_TOP -> if (!canMoveRightTop(x, y)) return
-                DragPointType.RIGHT_BOTTOM -> if (!canMoveRightBottom(x, y)) return
-                DragPointType.LEFT_BOTTOM -> if (!canMoveLeftBottom(x, y)) return
+                DragPointType.LEFT_TOP -> {
+                    if (!canMoveLeftTop(x, y)) {
+                        linePaint.color = Color.RED
+                    } else {
+                        linePaint.color = ContextCompat.getColor(context, R.color.teal_700)
+                    }
+                }
+                DragPointType.RIGHT_TOP -> {
+                    if (!canMoveRightTop(x, y)) {
+                        linePaint.color = Color.RED
+                    } else {
+                        linePaint.color = ContextCompat.getColor(context, R.color.teal_700)
+                    }
+                }
+                DragPointType.RIGHT_BOTTOM -> {
+                    if (!canMoveRightBottom(x, y)) {
+                        linePaint.color = Color.RED
+                    } else {
+                        linePaint.color = ContextCompat.getColor(context, R.color.teal_700)
+                    }
+                }
+                DragPointType.LEFT_BOTTOM -> {
+                    if (!canMoveLeftBottom(x, y)) {
+                        linePaint.color = Color.RED
+                    } else {
+                        linePaint.color = ContextCompat.getColor(context, R.color.teal_700)
+                    }
+                }
             }
         }
         draggingPoint.x = x.toFloat()
@@ -454,10 +489,10 @@ class RectangleView @JvmOverloads constructor(
             if (magnifierDrawable == null) {
                 initMagnifier()
             }
-            val draggingX = getViewPointX(draggingPoint!!)
-            val draggingY = getViewPointY(draggingPoint!!)
-            val radius = (width / 8f)
-            var cx = radius     //The x-coordinate of the center of the circle
+            var dragX = getViewPointX(draggingPoint!!)
+            var dragY = getViewPointY(draggingPoint!!)
+            val radius = (width / 8).toFloat()
+            var cx = radius //The x coordinate of the center of circle
             val lineOffset = dp2px(MAGNIFIER_BORDER_WIDTH).toInt()
             magnifierDrawable!!.setBounds(
                 lineOffset,
@@ -465,8 +500,7 @@ class RectangleView @JvmOverloads constructor(
                 radius.toInt() * 2 - lineOffset,
                 radius.toInt() * 2 - lineOffset
             )
-            //If magnifier drawn is intersecting with one of the points then move the magnifier
-            val pointsDistance: Double = CropUtils.getPointsDistance(draggingX, draggingY, 0f, 0f)
+            val pointsDistance: Double = CropUtils.getPointsDistance(dragX, dragY, 0f, 0f)
             if (pointsDistance < radius * 2.5) {
                 magnifierDrawable!!.setBounds(
                     width - radius.toInt() * 2 + lineOffset,
@@ -477,9 +511,16 @@ class RectangleView @JvmOverloads constructor(
                 cx = width - radius
             }
             canvas.drawCircle(cx, radius, radius, magnifierPaint)
-            magnifierMatrix.reset()
-            magnifierMatrix.setTranslate(radius - draggingX, radius - draggingY)
-//            magnifierMatrix.setScale(4f, 4f, radius - draggingX, radius - draggingY)
+            dragX = draggingPoint!!.x * mScaleX
+            dragY = draggingPoint!!.y * mScaleY
+            if (drawableWidth > drawableHeight)
+                dragX += drawableLeft / MAG_FACTOR
+            if (drawableHeight >= drawableWidth)
+                dragY += drawableTop / MAG_FACTOR
+            magnifierMatrix.setTranslate(
+                (radius - MAG_FACTOR * dragX),
+                (radius - MAG_FACTOR * dragY)
+            )
             magnifierDrawable!!.paint.shader.setLocalMatrix(magnifierMatrix)
             magnifierDrawable!!.draw(canvas)
             val crossLength = dp2px(5f)

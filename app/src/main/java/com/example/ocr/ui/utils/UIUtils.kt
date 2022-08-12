@@ -17,6 +17,8 @@ import androidx.core.view.updateLayoutParams
 import com.example.ocr.R
 import java.io.File
 
+const val FILENAME_FORMAT = "yyyy-MM-dd-HH-mm-ss-SSS"
+
 class UIUtils {
     companion object {
         //Function to set the status bar color to transparent.

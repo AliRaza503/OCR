@@ -2,8 +2,9 @@ package com.example.ocr
 
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
-import com.example.ocr.ui.utils.UIUtils
+import androidx.appcompat.app.AppCompatDelegate
 import com.example.ocr.databinding.ActivityMainBinding
+import com.example.ocr.ui.utils.UIUtils
 
 
 class MainActivity : AppCompatActivity() {
@@ -16,6 +17,8 @@ class MainActivity : AppCompatActivity() {
         setContentView(binding.root)
         //Set status bar color transparent
         UIUtils.setStatusBarTransparent(this, binding.root)
+        //By default light theme
+        AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
     }
 }
 

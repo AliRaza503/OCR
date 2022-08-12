@@ -12,7 +12,24 @@ import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import com.example.ocr.databinding.FragmentCropBinding
 import com.example.ocr.ui.utils.extensions.rotate
+import org.opencv.android.OpenCVLoader
 
+//Use this code to make the image lesser in size and to ease the processing
+object BitmapScaler {
+    // Scale and maintain aspect ratio given a desired width
+    // BitmapScaler.scaleToFitWidth(bitmap, 100);
+    fun scaleToFitWidth(b: Bitmap, width: Int): Bitmap {
+        val factor = width / b.width.toFloat()
+        return Bitmap.createScaledBitmap(b, width, (b.height * factor).toInt(), true)
+    }
+
+    // Scale and maintain aspect ratio given a desired height
+    // BitmapScaler.scaleToFitHeight(bitmap, 100);
+    fun scaleToFitHeight(b: Bitmap, height: Int): Bitmap {
+        val factor = height / b.height.toFloat()
+        return Bitmap.createScaledBitmap(b, (b.width * factor).toInt(), height, true)
+    }
+}
 
 class CropFragment : Fragment() {
     private lateinit var binding: FragmentCropBinding
@@ -28,6 +45,7 @@ class CropFragment : Fragment() {
         imgUri = Uri.parse(args.imgURI)
         binding.imgView.setImageURI(imgUri)
         bitmap = binding.imgView.drawable.toBitmap()
+        OpenCVLoader.initDebug()
         allClickListeners()
         return binding.root
     }
@@ -37,7 +55,10 @@ class CropFragment : Fragment() {
             findNavController().navigateUp()
         }
         binding.cropDoneBtn.setOnClickListener {
-            //TODO: get crop image
+            val tempBitmap = binding.imgView.getCroppedImage()
+            //TODO: instead pass it to the paint fragment
+            if (tempBitmap != null)
+                binding.imgView.setImageBitmap(tempBitmap)
         }
         binding.rotateImage.apply {
             setOnClickListener {

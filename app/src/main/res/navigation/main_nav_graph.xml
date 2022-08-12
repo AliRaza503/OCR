@@ -13,6 +13,9 @@
         <action
             android:id="@+id/action_homeScreenFragment_to_extractFromGalleryFragment"
             app:destination="@id/extractFromGalleryFragment" />
+        <action
+            android:id="@+id/action_homeScreenFragment_to_cameraFragment"
+            app:destination="@id/cameraFragment" />
     </fragment>
     <fragment
         android:id="@+id/extractFromGalleryFragment"
@@ -43,5 +46,16 @@
         <argument
             android:name="imgURI"
             app:argType="string" />
+    </fragment>
+    <fragment
+        android:id="@+id/cameraFragment"
+        android:name="com.example.ocr.ui.main.CameraFragment"
+        android:label="fragment_camera"
+        tools:layout="@layout/fragment_camera" >
+        <action
+            android:id="@+id/action_cameraFragment_to_cropFragment"
+            app:destination="@id/cropFragment"
+            app:popUpTo="@id/cameraFragment"
+            app:popUpToInclusive="true" />
     </fragment>
 </navigation>

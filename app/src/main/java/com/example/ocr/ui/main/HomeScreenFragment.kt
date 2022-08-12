@@ -28,7 +28,6 @@ import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import com.example.ocr.R
 import com.example.ocr.databinding.FragmentHomeScreenBinding
-import com.google.android.datatransport.BuildConfig
 
 
 class HomeScreenFragment : Fragment() {
@@ -75,19 +74,18 @@ class HomeScreenFragment : Fragment() {
                     requestCameraPermission()
                 } else {
                     //user clicked on allow button so proceed
-                    //TODO: navigate to camera fragment
+                    findNavController().navigate(R.id.action_homeScreenFragment_to_cameraFragment)
                 }
             }
     }
 
     private fun requestCameraPermission() {
-
         when {
             ContextCompat.checkSelfPermission(
                 requireContext(),
-                Manifest.permission.READ_EXTERNAL_STORAGE
+                Manifest.permission.CAMERA
             ) == PackageManager.PERMISSION_GRANTED -> {
-                //TODO: navigate to camera fragment
+                findNavController().navigate(R.id.action_homeScreenFragment_to_cameraFragment)
             }
             shouldShowRequestPermissionRationale(Manifest.permission.CAMERA) -> {
                 // This case means user previously denied the permission
@@ -95,41 +93,27 @@ class HomeScreenFragment : Fragment() {
                 // That why exactly we need this permission
                 showPermissionAlert(
                     "Camera Permission",
-                    "Permission required to scan documents\n" +
-                            " You can still grant it from settings",
+                    "Permission required to scan documents",
                 ) { requestCameraPermissionLauncher.launch(Manifest.permission.CAMERA) }
             }
             else -> {
                 // Everything is fine you can simply request the permission
-
                 showPermissionAlert(
                     "Camera Permission",
-                    "Permission required to scan documents",
+                    "Permission required to scan documents\n" +
+                            " You can still grant it from settings",
                 ) {
-                    val intent = Intent()
-                    intent.action = Settings.ACTION_APPLICATION_DETAILS_SETTINGS
-                    val uri = Uri.fromParts(
-                        "package",
-                        BuildConfig.APPLICATION_ID, null
-                    )
-                    intent.data = uri
-                    intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
-                    startActivity(intent)
+                    //Open settings to get permissions
+                    startActivity(Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS).apply {
+                        data = Uri.fromParts(
+                            "package",
+                            requireActivity().packageName,
+                            null
+                        )
+                    })
                 }
 
             }
-        }
-    }
-
-    //To be called when camera is to be accessed
-    fun callCameraPermission() {
-        if (ActivityCompat.checkSelfPermission(
-                requireContext(),
-                Manifest.permission.CAMERA
-            )
-            == PackageManager.PERMISSION_GRANTED
-        ) {
-            requestCameraPermissionLauncher.launch(Manifest.permission.CAMERA)
         }
     }
 
@@ -169,7 +153,6 @@ class HomeScreenFragment : Fragment() {
             }
             else -> {
                 // Everything is fine you can simply request the permission
-
                 showPermissionAlert(
                     "Storage Permission",
                     "Permission required to scan existing images.\n" +
@@ -282,6 +265,19 @@ class HomeScreenFragment : Fragment() {
                 requestStoragePermissionLauncher.launch(Manifest.permission.READ_EXTERNAL_STORAGE)
             } else {
                 findNavController().navigate(R.id.action_homeScreenFragment_to_extractFromGalleryFragment)
+            }
+        }
+        binding.fabCaptureNew.setOnClickListener {
+            //Close the fab menu before proceeding
+            binding.fabAdd.performClick()
+            if (ActivityCompat.checkSelfPermission(
+                    requireContext(),
+                    Manifest.permission.CAMERA
+                ) != PackageManager.PERMISSION_GRANTED
+            ) {
+                requestCameraPermissionLauncher.launch(Manifest.permission.CAMERA)
+            } else {
+                findNavController().navigate(R.id.action_homeScreenFragment_to_cameraFragment)
             }
         }
         //on clicking the root view clear focus of fab
